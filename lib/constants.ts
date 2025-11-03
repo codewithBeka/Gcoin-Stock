@@ -170,6 +170,67 @@ export const MARKET_DATA_WIDGET_CONFIG = {
     ],
 };
 
+export const INDICES_WIDGET_CONFIG = {
+  colorTheme: "dark",
+  isTransparent: true,
+  showSymbolLogo: true,
+  symbolsGroups: [
+    {
+      name: "Indices",
+      symbols: [
+        { name: "FOREXCOM:SPXUSD", displayName: "S&P 500" },
+        { name: "FOREXCOM:NSXUSD", displayName: "Nasdaq 100" },
+        { name: "FOREXCOM:DJI", displayName: "Dow Jones" },
+        { name: "INDEX:NKY", displayName: "Nikkei 225" },
+        { name: "INDEX:DEU40", displayName: "DAX" },
+        { name: "INDEX:UKX", displayName: "FTSE 100" },
+      ],
+    },
+  ],
+  width: "100%",
+  height: 600,
+};
+
+export const CRYPTO_WIDGET_CONFIG = {
+  colorTheme: "dark",
+  isTransparent: true,
+  showSymbolLogo: true,
+  symbolsGroups: [
+    {
+      name: "Crypto",
+      symbols: [
+        { name: "BINANCE:BTCUSDT", displayName: "Bitcoin" },
+        { name: "BINANCE:ETHUSDT", displayName: "Ethereum" },
+        { name: "BINANCE:SOLUSDT", displayName: "Solana" },
+        { name: "BINANCE:XRPUSDT", displayName: "XRP" },
+        { name: "BINANCE:DOGEUSDT", displayName: "Dogecoin" },
+      ],
+    },
+  ],
+  width: "100%",
+  height: 600,
+};
+
+export const COMMODITIES_WIDGET_CONFIG = {
+  colorTheme: "dark",
+  isTransparent: true,
+  showSymbolLogo: true,
+  symbolsGroups: [
+    {
+      name: "Commodities",
+      symbols: [
+        { name: "TVC:GOLD", displayName: "Gold" },
+        { name: "TVC:SILVER", displayName: "Silver" },
+        { name: "TVC:USOIL", displayName: "Crude Oil" },
+        { name: "TVC:UKOIL", displayName: "Brent Oil" },
+        { name: "TVC:COPPER", displayName: "Copper" },
+      ],
+    },
+  ],
+  width: "100%",
+  height: 600,
+};
+
 export const SYMBOL_INFO_WIDGET_CONFIG = (symbol: string) => ({
     symbol: symbol.toUpperCase(),
     colorTheme: 'dark',

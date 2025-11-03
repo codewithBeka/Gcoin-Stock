@@ -1,41 +1,57 @@
-'use client'
+"use client";
 
-import {NAV_ITEMS} from "@/lib/constants";
-import Link from "next/link";
-import {usePathname} from "next/navigation";
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import SearchCommand from "@/components/SearchCommand";
+import { StockWithWatchlistStatus } from "@/types";
 
-const NavItems = ({initialStocks}: { initialStocks: StockWithWatchlistStatus[]}) => {
-    const pathname = usePathname()
-
-    const isActive = (path: string) => {
-        if (path === '/') return pathname === '/';
-
-        return pathname.startsWith(path);
-    }
-
-    return (
-        <ul className="flex flex-col sm:flex-row p-2 gap-3 sm:gap-10 font-medium">
-            {NAV_ITEMS.map(({ href, label }) => {
-                if(href === '/search') return (
-                    <li key="search-trigger">
-                        <SearchCommand
-                            renderAs="text"
-                            label="Search"
-                            initialStocks={initialStocks}
-                        />
-                    </li>
-                )
-
-                return <li key={href}>
-                    <Link href={href} className={`hover:text-yellow-500 transition-colors ${
-                        isActive(href) ? 'text-gray-100' : ''
-                    }`}>
-                        {label}
-                    </Link>
-                </li>
-            })}
-        </ul>
-    )
+interface SearchNavProps {
+  initialStocks: StockWithWatchlistStatus[];
 }
-export default NavItems
+
+export default function SearchNav({ initialStocks }: SearchNavProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Open search on Ctrl + K
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setIsOpen(true);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  return (
+    <div className="flex items-center gap-2 relative">
+      {/* Desktop input */}
+      <div className="hidden md:block w-80">
+        <Input
+          placeholder="Search symbol (BTC, AAPL, GOLD...)"
+          readOnly
+          onClick={() => setIsOpen(true)}
+          className="border-yellow-400 focus:border-orange-400 focus:ring-amber-400 cursor-pointer"
+        />
+      </div>
+
+      {/* Mobile button */}
+      <div className="md:hidden">
+        <Button onClick={() => setIsOpen(true)} className="px-3 py-2">
+          🔍
+        </Button>
+      </div>
+
+      {/* SearchCommand modal */}
+      {isOpen && (
+        <SearchCommand
+          renderAs="text"
+          label="Search"
+          initialStocks={initialStocks}
+        />
+      )}
+    </div>
+  );
+}

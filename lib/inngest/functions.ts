@@ -5,6 +5,8 @@ import {getAllUsersForNewsEmail} from "@/lib/actions/user.actions";
 import { getWatchlistSymbolsByEmail } from "@/lib/actions/watchlist.actions";
 import { getNews } from "@/lib/actions/finnhub.actions";
 import { getFormattedTodayDate } from "@/lib/utils";
+import { News } from "@/database/models/News";
+import { getIO } from "../socket";
 
 // Local type definitions to satisfy references in this file.
 // Adjust fields as needed to better match your real data shapes.
@@ -140,3 +142,71 @@ export const sendDailyNewsSummary = inngest.createFunction(
         return { success: true, message: 'Daily news summary emails sent successfully' }
     }
 )
+
+export const sendDailyNewsSummaryBlog = inngest.createFunction(
+  { id: "Fetch Daily Market News" },
+  [ { event: "app/news/created" }, { cron: "0 * * * *" } ], // <- combined into an array
+
+  async ({ event, step }) => {
+
+    
+    // Fetch market/business headlines
+    const res = await fetch(
+      `https://newsapi.org/v2/top-headlines?category=business&language=en&apiKey=${process.env.NEWS_API_KEY}`
+    );
+
+    const data = await res.json();
+    const articles = data.articles?.slice(0, 5) || [];
+
+    // Summarize each article using AI
+    for (const article of articles) {
+        const { title, description, source, url, publishedAt } = article;
+
+
+        const prompt = `Summarize this news headline for a finance dashboard in one concise sentence:\nTitle: ${title}\nDescription: ${description}`;
+        const response = await step.ai.infer("generate-news-summary", {
+            model: step.ai.models.gemini({ model: "gemini-2.5-flash-lite" }),
+            body: {
+                contents: [
+                    {
+                        role: "user",
+                        parts: [{ text: prompt }],
+                    },
+                ],
+            },
+        });
+
+         const summary = response.candidates?.[0]?.content?.parts?.[0]?.text || description || "No summary available.";
+
+        // Save summarized article to the database
+        const created = await News.create({
+            title,
+            summary,
+            source: source?.name || "Unknown",
+            url,
+            publishedAt: new Date(publishedAt),
+        });
+
+        console.log(`Saved article: ${created.title}`);
+
+        // Trigger Inngest event for other workers or WebSocket updates
+        await inngest.send({
+            name: "app/news/created",
+            data: {
+                newsId: created._id,
+                title: created.title,
+                summary: created.summary,
+                source: created.source,
+                url: created.url,
+                publishedAt: created.publishedAt,
+            },
+        });
+    }
+
+  
+
+    return { success: true, count: articles.length };
+  }
+);
+
+

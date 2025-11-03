@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/sonner"
 import { Geist, Geist_Mono } from "next/font/google";
+import { constructMetadata } from "@/lib/utils"
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,10 +15,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Gcoin Stock",
-  description: "Track real-time stock prices, get personalized alerts and explore detailed company insights.",
-};
+export const metadata: Metadata = constructMetadata()
 
 
 

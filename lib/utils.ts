@@ -1,4 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
+// lib/metadata.ts
+import { Metadata } from "next"
 import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
@@ -137,3 +139,54 @@ export const getFormattedTodayDate = () => new Date().toLocaleDateString('en-US'
   day: 'numeric',
   timeZone: 'UTC',
 });
+
+
+
+
+export function constructMetadata({
+  title = "Gcoin Stock - Real-time Crypto & Market Dashboard",
+  description = "Track real-time crypto, stocks, indices, and commodities in one dashboard with live updates.",
+  image = "/dashboard.png",
+  icons = "/logo.png",
+  noIndex = false
+}: {
+  title?: string
+  description?: string
+  image?: string
+  icons?: string
+  noIndex?: boolean
+} = {}): Metadata {
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [
+        {
+          url: image,
+          width: 1200,
+          height: 630,
+          alt: "Gcoin Stock Logo",
+        }
+      ],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+      creator: "@GcoinStock", // replace with your Twitter handle
+    },
+    icons,
+    metadataBase: new URL("https://gcoin-stock-p4as.vercel.app"), // replace with your actual domain
+    themeColor: "#FFD700", // gold/yellow color for crypto feel
+    ...(noIndex && {
+      robots: {
+        index: false,
+        follow: false,
+      }
+    })
+  }
+}
