@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SearchCommand from "@/components/SearchCommand";
-import { StockWithWatchlistStatus } from "@/types";
 
 interface SearchNavProps {
   initialStocks: StockWithWatchlistStatus[];
