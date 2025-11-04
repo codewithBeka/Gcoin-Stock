@@ -37,7 +37,7 @@ export default function SignUp() {
       email: '',
       password: '',
       confirmPassword: '',
-      country: 'ETH', // default Ethiopia
+      country: 'ET', // default Ethiopia
       investmentGoals: 'Growth',
       riskTolerance: 'Medium',
       preferredIndustry: 'Technology',
