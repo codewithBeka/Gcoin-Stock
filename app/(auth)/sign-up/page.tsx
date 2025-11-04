@@ -26,16 +26,21 @@ interface SignUpFormData {
 export default function SignUp() {
   const router = useRouter();
 
-  const { register, handleSubmit, control, watch, formState: { errors, isSubmitting } } = useForm<SignUpFormData>({
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors, isSubmitting },
+  } = useForm<SignUpFormData>({
     defaultValues: {
       fullName: '',
       email: '',
       password: '',
       confirmPassword: '',
-      country: 'ETH',
+      country: 'ETH', // default Ethiopia
       investmentGoals: 'Growth',
       riskTolerance: 'Medium',
-      preferredIndustry: 'Technology'
+      preferredIndustry: 'Technology',
     },
     mode: 'onBlur',
   });
@@ -51,12 +56,11 @@ export default function SignUp() {
     { label: 'Special character (@$!%*?&)', test: (p: string) => /[@$!%*?&]/.test(p) },
   ];
 
-  // Password strength calculation
   const passwordStrength = (() => {
     if (!password) return { label: '', color: '' };
     const passedRules = passwordRules.filter(rule => rule.test(password)).length;
     if (passedRules <= 2) return { label: 'Weak', color: 'bg-red-500' };
-    if (passedRules === 3 || passedRules === 4) return { label: 'Medium', color: 'bg-yellow-400' };
+    if (passedRules <= 4) return { label: 'Medium', color: 'bg-yellow-400' };
     return { label: 'Strong', color: 'bg-green-400' };
   })();
 
@@ -65,24 +69,21 @@ export default function SignUp() {
       const result = await signUpWithEmail(data);
       if (result.success) {
         toast.success('Account created successfully!', {
-          description: 'Welcome to GCoin Stock! You can now sign in to your account.'
+          description: 'Welcome to GCoin Stock! You can now sign in to your account.',
         });
         router.push('/login');
       } else {
         toast.error('Sign up failed', { description: result.error || 'Something went wrong' });
+        console.error(result.error);
       }
     } catch (e) {
-      console.error(e);
-      toast.error('Sign up failed', {
-        description: e instanceof Error ? e.message : 'Failed to create an account.'
-      });
+      toast.error('Sign up failed', { description: e instanceof Error ? e.message : 'Failed to create an account.' });
     }
   };
 
   return (
     <>
       <h1 className="form-title">Sign Up & Personalize</h1>
-
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
 
         {/* Full Name */}
@@ -107,10 +108,7 @@ export default function SignUp() {
           error={errors.email}
           validation={{
             required: 'Email is required',
-            pattern: {
-              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-              message: 'Please enter a valid email address',
-            },
+            pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Please enter a valid email address' },
           }}
         />
 
@@ -125,20 +123,18 @@ export default function SignUp() {
           validation={{
             required: 'Password is required',
             minLength: { value: 8, message: 'Password must be at least 8 characters' },
-            validate: (p: string) => {
-              const allPassed = passwordRules.every(r => r.test(p));
-              return allPassed || 'Password does not meet all requirements';
-            },
+            validate: (p: string) =>
+              passwordRules.every(r => r.test(p)) || 'Password does not meet all requirements',
           }}
         />
 
-        {/* Password Strength Bar */}
+        {/* Password Strength */}
         {password && (
           <>
             <div className="h-2 w-full rounded bg-gray-800">
               <div
                 className={`h-2 rounded ${passwordStrength.color}`}
-                style={{ width: `${(passwordStrength.label === 'Weak' ? 33 : passwordStrength.label === 'Medium' ? 66 : 100)}%` }}
+                style={{ width: `${passwordStrength.label === 'Weak' ? 33 : passwordStrength.label === 'Medium' ? 66 : 100}%` }}
               />
             </div>
             <p className="text-sm mt-1 text-gray-300">
@@ -154,8 +150,7 @@ export default function SignUp() {
               const passed = rule.test(password);
               return (
                 <li key={index} className={clsx('flex items-center gap-2', passed ? 'text-green-400' : 'text-red-500')}>
-                  <span className="font-bold">{passed ? '✔' : '✖'}</span>
-                  {rule.label}
+                  <span className="font-bold">{passed ? '✔' : '✖'}</span> {rule.label}
                 </li>
               );
             })}
@@ -218,7 +213,7 @@ export default function SignUp() {
           required
         />
 
-        {/* Submit Button */}
+        {/* Submit */}
         <Button type="submit" disabled={isSubmitting} className="yellow-btn w-full mt-5">
           {isSubmitting ? 'Creating Account...' : 'Start Your Investing Journey'}
         </Button>
