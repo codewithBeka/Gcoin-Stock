@@ -176,8 +176,7 @@ export const sendDailyNewsSummaryBlog = inngest.createFunction(
             },
         });
 
-         const summary = response.candidates?.[0]?.content?.parts?.[0]?.text || description || "No summary available.";
-
+        const summary = (response.candidates?.[0]?.content?.parts?.[0] as { text: string })?.text || description || "No summary available.";
         // Save summarized article to the database
         const created = await News.create({
             title,

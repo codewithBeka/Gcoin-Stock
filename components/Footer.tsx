@@ -11,7 +11,7 @@ export default function Footer() {
         {/* Logo & Brand */}
         <div className="flex flex-col items-start gap-4">
           <div className="flex items-center gap-2">
-            <Image src="/gcoin-logo.png" alt="Gcoin Stock" width={40} height={40} />
+            <Image src="/assets/images/logo.png" alt="Gcoin Stock" width={40} height={40} />
             <span className="text-white font-bold text-lg">Gcoin Stock</span>
           </div>
           <p className="text-sm text-gray-400">

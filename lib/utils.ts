@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
 // lib/metadata.ts
-import { Metadata } from "next"
+import { Metadata, Viewport } from "next"
 import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
@@ -141,13 +141,16 @@ export const getFormattedTodayDate = () => new Date().toLocaleDateString('en-US'
 });
 
 
-
+// Add this new export to your file
+export const viewport: Viewport = {
+  themeColor: '#FFD700',
+};
 
 export function constructMetadata({
   title = "Gcoin Stock - Real-time Crypto & Market Dashboard",
   description = "Track real-time crypto, stocks, indices, and commodities in one dashboard with live updates.",
-  image = "/dashboard.png",
-  icons = "/logo.png",
+  image = "/assets/images/dashboard.png",
+  icons = "/assets/images/logo.png",
   noIndex = false
 }: {
   title?: string
@@ -181,7 +184,6 @@ export function constructMetadata({
     },
     icons,
     metadataBase: new URL("https://gcoin-stock-p4as.vercel.app"), // replace with your actual domain
-    themeColor: "#FFD700", // gold/yellow color for crypto feel
     ...(noIndex && {
       robots: {
         index: false,
