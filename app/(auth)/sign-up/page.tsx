@@ -34,6 +34,9 @@ const SignUp = () => {
     const onSubmit = async (data: SignUpFormData) => {
         try {
             const result = await signUpWithEmail(data);
+            toast.success('Account created successfully!', {
+                description: 'Welcome to GCoin Stock! You can now sign in to your account.'
+            });
             if(result.success) router.push('/');
         } catch (e) {
             console.error(e);

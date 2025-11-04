@@ -26,6 +26,9 @@ const SignIn = () => {
     const onSubmit = async (data: SignInFormData) => {
         try {
             const result = await signInWithEmail(data);
+            toast.success('Signed in successfully!', {
+                description: 'Welcome back to GCoin Stock!'
+            });
             if(result.success) router.push('/');
         } catch (e) {
             console.error(e);
