@@ -125,7 +125,7 @@ export default function SignUp() {
           validation={{
             required: 'Password is required',
             minLength: { value: 8, message: 'Password must be at least 8 characters' },
-            validate: (p) => {
+            validate: (p: string) => {
               const allPassed = passwordRules.every(r => r.test(p));
               return allPassed || 'Password does not meet all requirements';
             },
@@ -172,7 +172,7 @@ export default function SignUp() {
           error={errors.confirmPassword}
           validation={{
             required: 'Please confirm your password',
-            validate: (value) => value === password || 'Passwords do not match',
+            validate: (value: string) => value === password || 'Passwords do not match',
           }}
         />
 
