@@ -149,8 +149,8 @@ export const viewport: Viewport = {
 export function constructMetadata({
   title = "Gcoin Stock - Real-time Crypto & Market Dashboard",
   description = "Track real-time crypto, stocks, indices, and commodities in one dashboard with live updates.",
-  image = "/assets/images/dashboard.png",
-  icons = "/assets/images/logo.png",
+  image = "https://gcoin-investment.vercel.app/assets/images/dashboard.png",
+  icons = "https://gcoin-investment.vercel.app/assets/images/logo.png",
   noIndex = false
 }: {
   title?: string
@@ -183,7 +183,7 @@ export function constructMetadata({
       creator: "@GcoinStock", // replace with your Twitter handle
     },
     icons,
-    metadataBase: new URL("https://gcoin-stock-p4as.vercel.app"), // replace with your actual domain
+    metadataBase: new URL("https://gcoin-investment.vercel.app"), // replace with your actual domain
     ...(noIndex && {
       robots: {
         index: false,
