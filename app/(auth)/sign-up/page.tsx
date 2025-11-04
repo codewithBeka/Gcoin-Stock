@@ -47,6 +47,7 @@ export default function SignUp() {
 
   const password = useWatch({ control, name: 'password' });
 
+
   // Password rules
   const passwordRules = [
     { label: 'At least 8 characters', test: (p: string) => p.length >= 8 },
@@ -71,7 +72,7 @@ export default function SignUp() {
         toast.success('Account created successfully!', {
           description: 'Welcome to GCoin Stock! You can now sign in to your account.',
         });
-        router.push('/login');
+        router.push('/');
       } else {
         toast.error('Sign up failed', { description: result.error || 'Something went wrong' });
         console.error(result.error);
